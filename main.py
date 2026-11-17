@@ -1,7 +1,7 @@
-from fastapi import FastAPI
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext # Ferramenta para criar a criptografica das nossas senhas
 from dotenv import load_dotenv # Carrega as variaveis de ambiente
+from fastapi import FastAPI
 import os
 
 load_dotenv()

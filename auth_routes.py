@@ -1,12 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException # Permite organizar as rotas da API em diferentes arquivos ou módulos
-from models import User
-from dependencies import get_session, verify_token
 from main import bcrypt_context, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, HTTPException # Permite organizar as rotas da API em diferentes arquivos ou módulos
+from datetime import datetime, timedelta, timezone # Padrão do python para manipulação de tempo
+from dependencies import get_session, verify_token
 from schemas import UserSchema, LoginSchema
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError # Responsavel pela geração do token
-from datetime import datetime, timedelta, timezone # Padrão do python para manipulação de tempo
-from fastapi.security import OAuth2PasswordRequestForm
+from models import User
 
 # Sempre definir um prefixo para as rotas para organizar o código
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
@@ -79,7 +79,9 @@ async def create_account(email: str, password: str, name: str):
 # Todas as rotas dependem de uma sessão, portanto, para não criarmos elas em todos os endpoints criamos uma dependencia
 # criado no arquivo dependencies.py que conterá a minha sessão e o fechamento dessa sessão
 
-@auth_router.post("/create_user")
+# IMPLEMENTAR MODIIFCAÇÃO DE QUE SOMENTE USUARIOS QUE JÁ SEJAM ADMIN, POSSAM CRIAR NOVAS CONTAS ADMIN, USANDO A LÓGICA IMPLEMENTADA EM ORDER_ROUTES order_cancelation DE PRIVILEGIOS...
+
+@auth_router.post("/create_account")
 async def create_account(user_schema: UserSchema, session: Session = Depends(get_session)):
     # Pesquisando na tabela de usuario se existe um usuario com esse e-mail
     # Para isso trazemos a tabela de usuarios de models para cá por meio da importação 
